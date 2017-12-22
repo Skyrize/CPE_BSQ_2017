@@ -9,7 +9,7 @@ SRC	=	main.c
 
 OBJ	=	$(SRC:.c=.o)
 
-CC	= 	gcc
+CC	= 	gcc -g3
 
 NAME	=	bsq
 

@@ -5,9 +5,18 @@
 ** all prototypes
 */
 
-#ifndef MY_H
-#define MY_H
+#ifndef MY_H_
+#define MY_H_
 #include <stdarg.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <time.h>
+#include <dirent.h>
+#include <stdio.h>
+#include <ncurses.h>
+#include <fcntl.h>
 void my_putchar(char);
 int my_isneg(int);
 int my_put_nbr(int);
@@ -38,6 +47,7 @@ int my_str_islower(char const *);
 int my_str_isupper(char const *);
 int my_str_isprintable(char const *);
 int my_showstr(char const *);
+char *my_double_strcat(char *, char *);
 int my_showmem(char const *, int);
 char *my_strcat(char *, char const *);
 char *my_strncat(char *, char const *, int);
@@ -53,17 +63,37 @@ void my_printadress(va_list);
 void my_printoctal(va_list);
 void my_printpercent(va_list);
 void my_printformatedstring(va_list);
-void my_amazing_sorter(int *, int);
-void rotate_left(int *, int, int *);
-void rotate_right(int *, int, int *);
-void display_pa(int);
-void display_pb(int *);
-void display_rra(int *);
-void display_ra(int *);
+int display_file(char *, int *);
+int my_ls_main(int, char **, int *);
+int display_dir(char *, char *, int *);
+int check_opts(int *, char **, int);
+void my_putstr_special(int, char *, int);
+char *display_rights(struct stat *);
+void type_displayer(struct stat *, char *);
+int my_opt_r_display(char *, int *, DIR ***);
+int display_total_blocks(struct dirent ****, DIR ****, char **, int *);
+void print_current_dir(char **, int *);
+void display_opt_l(struct stat *, char *, int *);
 
 typedef struct fnct_s
 {
 	char balise;
 	void (*fptr)(va_list list);
 } fnct_t;
-#endif
+
+typedef struct bsq_map_s
+{
+	unsigned int start_i;
+	unsigned int map_size;
+	unsigned int int_map_size;
+	unsigned int x_len;
+	unsigned int y_len;
+	char *map;
+	int *int_map;
+} bsq_map_t;
+
+#define A map->int_map[i - 1]
+#define B map->int_map[i - map->x_len - 1]
+#define C map->int_map[i - map->x_len]
+
+#endif /* MY_H_ */
