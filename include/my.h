@@ -83,11 +83,12 @@ typedef struct fnct_s
 
 typedef struct bsq_map_s
 {
-	unsigned int start_i;
-	unsigned int map_size;
-	unsigned int int_map_size;
+	unsigned int starter;
 	unsigned int x_len;
 	unsigned int y_len;
+	unsigned int int_map_length;
+	unsigned int pos;
+	unsigned int square_size;
 	char *map;
 	int *int_map;
 } bsq_map_t;

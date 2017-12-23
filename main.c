@@ -6,6 +6,19 @@
 */
 #include "include/my.h"
 
+void put_x_in_map(bsq_map_t *map)
+{
+	int a = 0;
+
+	for (unsigned int i = map->pos; a < map->square_size * map->square_size; i--) {
+		if (a > 0 && a % map->square_size == 0) {
+			i = i - map->x_len + map->square_size - 1;
+		}
+		map->map[i] = 'x';
+		a++;
+	}
+}
+
 void check_end_of_line(bsq_map_t *map, int *a, int *i)
 {
 	if ((*i + 1) % map->x_len == 0) {
@@ -14,11 +27,24 @@ void check_end_of_line(bsq_map_t *map, int *a, int *i)
 	}
 }
 
+void stock_square_size_and_pos(bsq_map_t *map, int i, int a)
+{
+	if (map->int_map[i] > map->square_size) {
+		map->square_size = map->int_map[i];
+		map->pos = a;
+	}
+}
+
 void look_for_biggest_square_with_numbers(bsq_map_t *map)
 {
-	int a = map->start_i + map->x_len + 2;
+	int a = map->starter + map->x_len + 2;
 
-	for (int i = map->x_len + 1 ; i < map->int_map_size ; i++ , a++) {
+	for (int i = map->x_len + 1; i < map->int_map_length; i++, a++) {
+		if (map->map[a] == 'o') {
+			map->int_map[i] = 0;
+			check_end_of_line(map, &a, &i);
+			continue;
+		}
 		if (A <= C && A <= B) {
 			map->int_map[i] = A + 1;
 		} else if (B <= A && B <= C) {
@@ -26,14 +52,16 @@ void look_for_biggest_square_with_numbers(bsq_map_t *map)
 		} else if (C <= A && C <= B) {
 			map->int_map[i] = C + 1;
 		}
-		if (map->map[a] == 'o')
-			map->int_map[i] = 0;
+		stock_square_size_and_pos(map, i, a);
 		check_end_of_line(map, &a, &i);
 	}
+	put_x_in_map(map);
 }
 
 void fill_first_col(bsq_map_t *map, int i, int a)
 {
+	map->square_size = 0;
+	map->pos = 0;
 	while (i < map->y_len * map->x_len + map->x_len) {
 		switch (map->map[i]) {
 			case '.':
@@ -47,13 +75,6 @@ void fill_first_col(bsq_map_t *map, int i, int a)
 		i += map->x_len + 1;
 	}
 	look_for_biggest_square_with_numbers(map);
-	for (int x = 0 ; x < map->int_map_size ; x++) {
-		if (x > 0 && x % map->x_len == 0) {
-			printf("\n");
-		}
-		printf("%d", map->int_map[x]);
-	}
-	printf("\nmap x_len = %d /// map y_len = %d\n", map->x_len, map->y_len);
 }
 
 void create_int_map(bsq_map_t *map)
@@ -64,9 +85,10 @@ void create_int_map(bsq_map_t *map)
 	map->int_map = malloc(sizeof(int) * (map->y_len * map->x_len));
 	if (map->int_map == NULL)
 		exit (84);
-	for (; map->map[i] != '.' ; i++);
-	map->start_i = i;
-	for (; map->map[i] != '\n' ; i += 1, a +=1) {
+	for (; map->map[i] != '.' && map->map[i] != 'o'; i++)
+		map->map[i] = 0;
+	map->starter = i;
+	for (; map->map[i] != '\n'; i += 1, a +=1) {
 		switch (map->map[i]) {
 			case '.':
 			map->int_map[a] = 1;
@@ -97,8 +119,8 @@ int main(int ac, char **av)
 	map.map[buf.st_size] = 0;
 	map.y_len = my_getnbr(map.map);
 	map.x_len = (buf.st_size - map.y_len - 1) / map.y_len;
-	map.int_map_size = map.x_len * map.y_len;
-	printf("%s\n", map.map);
+	map.int_map_length = map.x_len * map.y_len;
 	create_int_map(&map);
+	write(1, map.map, buf.st_size);
 	return (0);
 }
