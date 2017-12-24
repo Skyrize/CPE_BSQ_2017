@@ -93,6 +93,8 @@ typedef struct bsq_map_s
 	int *int_map;
 } bsq_map_t;
 
+void look_for_biggest_square_with_numbers(bsq_map_t *);
+
 #define A map->int_map[i - 1]
 #define B map->int_map[i - map->x_len - 1]
 #define C map->int_map[i - map->x_len]

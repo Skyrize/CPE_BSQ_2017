@@ -5,11 +5,12 @@
 ## all clean fclean re
 ##
 
-SRC	=	main.c
+SRC	=	main.c	\
+		seek_square.c
 
 OBJ	=	$(SRC:.c=.o)
 
-CC	= 	gcc -g3
+CC	= 	gcc
 
 NAME	=	bsq
 

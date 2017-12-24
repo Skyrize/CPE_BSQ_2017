@@ -37,7 +37,7 @@ char *my_strstr(char const *str, char const *to_find)
 		if (str[i] == to_find[0])
 			res = occur(str, to_find, maxx, &i);
 		if (res == 1)
-			return ((char *) &(str[i - maxx]));
+			return ((char *)&(str[i - maxx]));
 		i = i + 1;
 	}
 	return (0);
