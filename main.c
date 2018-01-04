@@ -34,7 +34,7 @@ void create_int_map(bsq_map_t *map)
 	if (map->int_map == NULL)
 		exit (84);
 	for (; map->map[i] != '.' && map->map[i] != 'o'; i++)
-		map->map[i] = 0;
+		map->number_length++;
 	map->starter = i;
 	for (; map->map[i] != '\n'; i += 1, a +=1) {
 		switch (map->map[i]) {
@@ -52,23 +52,22 @@ void create_int_map(bsq_map_t *map)
 int main(int ac, char **av)
 {
 	int fd = 0;
-	int error_no = 0;
 	struct stat buf;
 	bsq_map_t map;
 
 	if (ac != 2)
 		return (84);
 	fd = open(av[1], O_RDONLY);
-	error_no = stat(av[1], &buf);
-	if (fd == -1 || error_no == -1)
+	if (fd == -1 || stat(av[1], &buf) == -1)
 		return (84);
 	map.map = malloc(sizeof(char) * (buf.st_size + 1));
 	read(fd, map.map, buf.st_size);
 	map.map[buf.st_size] = 0;
+	map.number_length = 0;
 	map.y_len = my_getnbr(map.map);
 	map.x_len = (buf.st_size - map.y_len - 1) / map.y_len;
 	map.int_map_length = map.x_len * map.y_len;
 	create_int_map(&map);
-	write(1, map.map, buf.st_size);
+	write(1, map.map + map.number_length, buf.st_size - map.number_length);
 	return (0);
 }

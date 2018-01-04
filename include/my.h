@@ -83,6 +83,7 @@ typedef struct fnct_s
 
 typedef struct bsq_map_s
 {
+	unsigned int number_length;
 	unsigned int starter;
 	unsigned int x_len;
 	unsigned int y_len;
